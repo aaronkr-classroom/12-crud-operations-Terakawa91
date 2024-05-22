@@ -1,17 +1,25 @@
 // controllers/usersController.js
 "use strict";
 
-/**
- * Listing 18.9 (p. 268-269)
- * Listing 18.11 (p. 271)
- * userController.js에서 인덱스 액션 생성과 index 액션의 재방문
- */
 const User = require("../models/User"); // 사용자 모델 요청
 
 module.exports = {
-  /*
-   * @TODO: index과 indexView 액션을 객체 리터럴로 묶어 익스포트
-   */
+  index: (req, res, next) => { //db 요청과 응답
+    User.find()
+      .then(users => {
+        res.locals.users = users;
+        next();
+      })
+      .catch(e => {
+        console.log(`Error getting users: ${e.message}`);
+        // res.redirect('/');
+        next(e);
+      });
+  },
+
+  indexView: (req, res) => { //page rendering
+    res.render("users/index");
+  }
 };
 
 /**
